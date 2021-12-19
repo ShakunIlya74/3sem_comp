@@ -1,26 +1,25 @@
 import time
 from random import random
-flag = "a "
-max_time = 4
-timer = 2
 
-def rest(flo, timer):
-	i = 0
-	while((flo - timer*i) > 0):
-		i+=1
-	return (timer*i - flo, i)
+MAX_TIME = 1
 	
-def func(m_time, flag):
-	a = random()
-	work = m_time * a
-	print("begin ", flag)
+def func(flag):
+	work =  MAX_TIME * (random() + 0.5)
+	print("begin", flag)
 	time.sleep(work)
-	print("end ", flag, work)
-	return work
-	
-while(True):
-	work = func(max_time, flag)
-	sleep, i = rest(work, timer)
-	print(sleep, i)
-	time.sleep(sleep)
+	print("end", flag, work)
+
+def main():
+    flag = "a"
+    while True:   
+        start = time.time()
+        print(start)
+        func(flag)
+        end = time.time()
+        duration = end - start
+        time.sleep((MAX_TIME - duration) % MAX_TIME)   
+        
+if __name__ == "__main__":
+    main()
+
     
