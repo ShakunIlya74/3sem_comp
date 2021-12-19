@@ -2,14 +2,13 @@ import time
 import random
 import multiprocessing
 import itertools
+import math
 
-TIME_TO_SLEEP = 10
+TIME_TO_SLEEP = 2
 
-def rest(flo, timer):
-	i = 0
-	while((flo - timer*i) > 0):
-		i+=1
-	return (timer*i - flo, i)
+def rest(time_spent, timer):
+	periods = math.ceil(time_spent / timer)
+	return (TIME_TO_SLEEP - time_spent) % TIME_TO_SLEEP , periods
 
 def sleepy_man1():
     print('Man 1 is starting to sleep')
@@ -32,22 +31,22 @@ if __name__ == '__main__':
     tic = time.time()
     for person in sleepy_people:
         local_tic = time.time()
-        p =  multiprocessing.Process(target=person)
+        p =  multiprocessing.Process(target=person, args=())
         p.start()
         p.join()
         toc = time.time()
         time_spent = toc - local_tic
         print(f'Done in {time_spent:.4f} seconds')
-        sleep, i = rest(time_spent, TIME_TO_SLEEP)
-        period+=i
+        sleep, task_periods = rest(time_spent, TIME_TO_SLEEP)
+        period += task_periods
         #print(period)
         time.sleep(sleep - time_diff)
-        if (i == 1):
+        if task_periods == 1:
             print(f'Done early, wait {sleep:.4f} seconds')
         else:
             print(f'Done later, wait {sleep:.4f} seconds')
         
         local_toc = time.time()
         time_diff = local_toc - tic - TIME_TO_SLEEP * period
-        print(f'Accuracy of 10ss {time_diff:.4f} seconds')
+        print(f'{local_tic % TIME_TO_SLEEP} Period accuracy {time_diff:.4f} seconds')
         
